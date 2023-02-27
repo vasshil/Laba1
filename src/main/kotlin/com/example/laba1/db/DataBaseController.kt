@@ -13,6 +13,7 @@ class DataBaseController {
 
     var clientList = mutableListOf<Client>()
     var goodsList = mutableListOf<Goods>()
+    var orderList = mutableListOf<Goods>()
 
     init {
 
