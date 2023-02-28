@@ -22,6 +22,7 @@ class DataBaseController {
 
             getAllClients()
             getAllGoods()
+            getAllOrders()
 
             println(getAllClients())
         } catch (ignored: SQLException) {
@@ -84,6 +85,23 @@ class DataBaseController {
         }
 
         return goodsList
+    }
+
+    fun addNewGoods(goods: Goods) {
+//        goodsList += goods
+        val task = "insert into $goodsTableName(naming, count, price)" +
+                "values ('${goods.name}', ${goods.count}, ${goods.price});"
+        sendStatement(task, false)
+
+        getAllGoods()
+        getAllOrders()
+    }
+
+    fun getAllOrders(): MutableList<Goods> {
+        orderList = mutableListOf()
+        orderList.addAll(goodsList)
+
+        return orderList
     }
 
 
