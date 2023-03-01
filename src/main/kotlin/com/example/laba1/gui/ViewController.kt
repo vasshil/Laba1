@@ -118,7 +118,6 @@ class ViewController {
 
     @FXML
     fun onClientSearchTextChanged(event: KeyEvent) {
-        println("text changed: ${searchClient.text}")
 
         clientTable.items.removeAll(clientTable.items)
 
@@ -318,6 +317,8 @@ class ViewController {
 
         val selectedClient = dbController.clientList.find { it.name == clientSelector.value }
 
+        var needToUpdateDB = false
+
         when(sellTypeSelector.value) {
             sellTypes[0] -> { // Наличный расчет
 
@@ -327,7 +328,7 @@ class ViewController {
 
                 selectedClient!!.totalPurchase += totalOrderPrice
 
-                // TODO update db
+                needToUpdateDB = true
 
             }
             sellTypes[1] -> { // Безналичный расчет
@@ -345,7 +346,7 @@ class ViewController {
                     selectedClient.totalPurchase += totalOrderPrice
                     selectedClient.currentBalance -= totalOrderPrice
 
-                    // TODO update db
+                    needToUpdateDB = true
 
 
                 }
@@ -370,7 +371,7 @@ class ViewController {
                         selectedClient.currentBalance = 0
                         selectedClient.countRemainingDebt()
 
-                        // TODO update db
+                        needToUpdateDB = true
 
                     }
 
@@ -384,7 +385,7 @@ class ViewController {
                     selectedClient.currentDebt += totalOrderPrice
                     selectedClient.countRemainingDebt()
 
-                    // TODO update db
+                    needToUpdateDB = true
 
 
                 }
@@ -400,7 +401,7 @@ class ViewController {
                     goods.count -= goods.wantedCountOrder.toInt()
                 }
 
-                // TODO update db
+                needToUpdateDB = true
 
 
             }
@@ -415,20 +416,26 @@ class ViewController {
                     selectedClient.currentDebt = 0
                     selectedClient.countRemainingDebt()
 
-                    // TODO update db
+                    needToUpdateDB = true
 
                 } else {
 
                     selectedClient.currentDebt -= totalOrderPrice
                     selectedClient.countRemainingDebt()
 
-                    // TODO update db
+                    needToUpdateDB = true
 
 
                 }
 
-
             }
+
+        }
+
+        if (needToUpdateDB) {
+            dbController.updateClientTable(selectedClient!!)
+            dbController.updateGoodsTable()
+//            dbController.createOrder(selectedClient, sellTypes.indexOf(sellTypeSelector.value))
         }
 
 

@@ -66,7 +66,6 @@ class DataBaseController {
 
     }
 
-
     @Throws(SQLException::class)
     fun getAllGoods(): MutableList<Goods> {
 
@@ -88,7 +87,7 @@ class DataBaseController {
     }
 
     fun addNewGoods(goods: Goods) {
-//        goodsList += goods
+
         val task = "insert into $goodsTableName(naming, count, price)" +
                 "values ('${goods.name}', ${goods.count}, ${goods.price});"
         sendStatement(task, false)
@@ -104,33 +103,33 @@ class DataBaseController {
         return orderList
     }
 
+    fun updateClientTable(client: Client) {
 
-//    fun getUserRole(username: String, password: String): Roles {
-//        val task = "select job from \"user\" where username = '$username' and password = '$password';"
-//        val result = sendStatement(task, true) as ResultSet
-//        while (result.next()) {
-//            return Roles.values()[result.getInt("job")]
-//        }
-//
-//        return Roles.NONE
-//
-//    }
-//
-//    fun deleteUserById(id: Int) {
-//        val task = "delete from \"user\" where id = $id;"
-//        sendStatement(task, false)
-//    }
-//
-//    fun updateUserById(id: Int, user: UserData) {
-//        val task = "update \"user\" set fullName = '${user.fullName}', job = '${user.job}', address = '${user.address}', phoneNumber = '${user.phoneNumber}', username = '${user.username}', password = '${user.password}' where id = $id;"
-//        sendStatement(task, false)
-//    }
-//
-//    fun addNewUser(user: UserData) {
-//        val task = "insert into \"user\"(fullName, job, address, phoneNumber, username, password)" +
-//                "values ('${user.fullName}', ${user.job}, '${user.address}', '${user.phoneNumber}', '${user.username}', '${user.password}');"
-//        sendStatement(task, false)
-//    }
+        val task = "update client set " +
+                "totalpurchase = ${client.totalPurchase}, " +
+                "currentbalance = ${client.currentBalance}, " +
+                "currentdebt = ${client.currentDebt}, " +
+                "remainingdebt = ${client.remainingDebt} " +
+                "where id = ${client.id};"
+
+        sendStatement(task, false)
+
+    }
+
+    fun updateGoodsTable() {
+
+        for (goods in goodsList) {
+
+            val task = "update goods set " +
+                    "count = ${goods.count} where id = ${goods.id};"
+
+            sendStatement(task, false)
+
+        }
+
+    }
+
+
 
     @Throws(SQLException::class)
     fun sendStatement(task: String, isSelecting: Boolean): Any {
